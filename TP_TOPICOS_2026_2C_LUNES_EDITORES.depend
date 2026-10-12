@@ -1,0 +1,20 @@
+# depslib dependency file v1.0
+1791841411 source:c:\users\valen\desktop\topicos\tp_topicos_2026_2c_lunes_editores\funciones_alba.c
+
+1791842938 source:c:\users\valen\desktop\topicos\tp_topicos_2026_2c_lunes_editores\funciones_campagna.c
+	"funciones_campagna.h"
+
+1791842938 c:\users\valen\desktop\topicos\tp_topicos_2026_2c_lunes_editores\funciones_campagna.h
+
+1791841365 source:c:\users\valen\desktop\topicos\tp_topicos_2026_2c_lunes_editores\funciones_garcia.c
+
+1791841481 source:c:\users\valen\desktop\topicos\tp_topicos_2026_2c_lunes_editores\funciones_pagliettini.c
+
+1791843121 source:c:\users\valen\desktop\topicos\tp_topicos_2026_2c_lunes_editores\main.c
+	<stdio.h>
+	<stdlib.h>
+	"funciones_grupo.h"
+
+1791842938 c:\users\valen\desktop\topicos\tp_topicos_2026_2c_lunes_editores\funciones_grupo.h
+	"funciones_campagna.h"
+
