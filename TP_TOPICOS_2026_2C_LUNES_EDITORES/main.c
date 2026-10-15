@@ -11,6 +11,8 @@ int main()
         printf("La imagen tiene una resolucion de %dx%d pixeles",imagenPrueba->header.alto,imagenPrueba->header.ancho);
     }
 
+    puts("TUKEN SOLTA MI CANICHE");
+
     liberarImagen(imagenPrueba);
     return 0;
 }
