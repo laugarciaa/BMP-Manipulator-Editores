@@ -68,3 +68,247 @@ void liberarImagen(Imagen* img)
     // liberar la estructura principal
     free(img);
 }
+
+int obtenerValorConIgual(const char *arg, const char *clave, int *valorOut)
+{
+    size_t lenClave = strlen(clave);
+
+    if(strncmp(arg, clave, lenClave) != 0)
+        return 0;
+
+    if(arg[lenClave] != '=')
+        return 0;
+
+    char *p = arg + lenClave + 1;
+
+    if(*p == '\0')
+        return 0;
+
+    char *q = p;
+
+    while(*q != '\0')
+    {
+        if(!EsNum(*q))
+            return 0;
+
+        q++;
+    }
+
+
+    *valorOut = atoi(p);
+
+    return 1;
+}
+
+int parsearArgumentos(int argCount, char *argVec[], Configuracion *config)
+{
+    if(config == NULL || argVec == NULL)
+        return ERROR_MEM;
+
+    int i = 1;
+
+    while(i < argCount)
+    {
+        char *arg = argVec[i];
+
+        /*  Filtros SIN =  */
+        if(strcmp(arg, "--help") == 0)
+        {
+            config->help = 1;
+            i++;
+        }
+        else if(strcmp(arg, "--info") == 0)
+        {
+            config->info = 1;
+            i++;
+        }
+        else if(strcmp(arg, "--validar") == 0)
+        {
+            config->validar = 1;
+            i++;
+        }
+        else if(strcmp(arg, "--negativo") == 0)
+        {
+            config->negativo = 1;
+            i++;
+        }
+        else if(strcmp(arg, "--escala-de-grises") == 0)
+        {
+            config->escalaGrises = 1;
+            i++;
+        }
+        else if(strcmp(arg, "--espejar-horizontal") == 0)
+        {
+            config->espejarHorizontal = 1;
+            i++;
+        }
+        else if(strcmp(arg, "--espejar-vertical") == 0)
+        {
+            config->espejarVertical = 1;
+            i++;
+        }
+        else if(strcmp(arg, "--rotar-derecha") == 0)
+        {
+            config->rotarDerecha = 1;
+            i++;
+        }
+        else if(strcmp(arg, "--rotar-izquierda") == 0)
+        {
+            config->rotarIzquierda = 1;
+            i++;
+        }
+        else if(strcmp(arg, "--concatenar-horizontal") == 0)
+        {
+            config->concatenarHorizontal = 1;
+            i++;
+        }
+        else if(strcmp(arg, "--concatenar-vertical") == 0)
+        {
+            config->concatenarVertical = 1;
+            i++;
+        }
+        else if(strcmp(arg, "--comodin") == 0)
+        {
+            config->comodin = 1;
+            i++;
+        }
+        else
+        {
+            int val = 0;
+
+            /* Filtros con =NUMERO */
+            if(obtenerValorConIgual(arg, "--aumentar-contraste", &val))
+            {
+                if(val < 0 || val > 100)
+                {
+                    printf("[AVISO] Valor fuera de rango (0-100) para --aumentar-contraste=%d. No aplica|z este filtro.\n", val);
+                    i++;
+                }
+                else
+                {
+                    config->aumentarContraste = 1;
+                    config->valorAumentarContraste = val;
+                    i++;
+                }
+            }
+            else if(obtenerValorConIgual(arg, "--reducir-contraste", &val))
+            {
+                if(val < 0 || val > 100)
+                {
+                    printf("[AVISO] Valor fuera de rango (0-100) para --reducir-contraste=%d. No aplica este filtro.\n", val);
+                    i++;
+                }
+                else
+                {
+                    config->reducirContraste = 1;
+                    config->valorReducirContraste = val;
+                    i++;
+                }
+            }
+            else if(obtenerValorConIgual(arg, "--tonalidad-azul", &val))
+            {
+                if(val < 0 || val > 100)
+                {
+                    printf("[AVISO] Valor fuera de rango (0-100) para --tonalidad-azul=%d. No aplica este filtro.\n", val);
+                    i++;
+                }
+                else
+                {
+                    config->tonalidadAzul = 1;
+                    config->valorTonalidadAzul = val;
+                    i++;
+                }
+            }
+            else if(obtenerValorConIgual(arg, "--tonalidad-verde", &val))
+            {
+                if(val < 0 || val > 100)
+                {
+                    printf("[AVISO] Valor fuera de rango (0-100) para --tonalidad-verde=%d. No aplica este filtro.\n", val);
+                    i++;
+                }
+                else
+                {
+                    config->tonalidadVerde = 1;
+                    config->valorTonalidadVerde = val;
+                    i++;
+                }
+            }
+            else if(obtenerValorConIgual(arg, "--tonalidad-roja", &val))
+            {
+                if(val < 0 || val > 100)
+                {
+                    printf("[AVISO] Valor fuera de rango (0-100) para --tonalidad-roja=%d. No aplica este filtro.\n", val);
+                    i++;
+                }
+                else
+                {
+                    config->tonalidadRoja = 1;
+                    config->valorTonalidadRoja = val;
+                    i++;
+                }
+            }
+            else if(obtenerValorConIgual(arg, "--recortar", &val))
+            {
+                if(val < 0 || val > 100)
+                {
+                    printf("[AVISO] Valor fuera de rango (0-100) para --recortar=%d. No aplica este filtro.\n", val);
+                    i++;
+                }
+                else
+                {
+                    config->recortar = 1;
+                    config->valorRecortar = val;
+                    i++;
+                }
+            }
+            else if(obtenerValorConIgual(arg, "--achicar", &val))
+            {
+                if(val < 0 || val > 100)
+                {
+                    printf("[AVISO] Valor fuera de rango (0-100) para --achicar=%d. No aplica este filtro.\n", val);
+                    i++;
+                }
+                else
+                {
+                    config->achicar = 1;
+                    config->valorAchicar = val;
+                    i++;
+                }
+            }
+            /* Rutas de imagen */
+            else if(arg[0] != '-')
+            {
+                if(config->cantidadImagenes < 2)
+                {
+                    config->imagenes[config->cantidadImagenes] = arg;
+                    config->cantidadImagenes++;
+                    i++;
+                }
+                else
+                {
+                    printf("[AVISO] Se ingresaron mas de 2 imagenes. No aplica '%s'.\n", arg);
+                    i++;
+                }
+            }
+            /* Empieza con '-' pero no es -- exacto ni filtro válido */
+            else
+            {
+                printf("[AVISO] Argumento desconocido o invalido: '%s'. No aplica.\n", arg);
+                i++;
+            }
+        }
+    }
+
+    /* Validación para concatenación */
+    if((config->concatenarHorizontal == 1 || config->concatenarVertical == 1))
+    {
+        if(config->cantidadImagenes < 2)
+        {
+            printf("[AVISO] Para concatenar se requieren 2 imagenes. No se aplicara la concatenacion.\n");
+            config->concatenarHorizontal = 0;
+            config->concatenarVertical = 0;
+        }
+    }
+
+    return TODO_PIOLA;
+}

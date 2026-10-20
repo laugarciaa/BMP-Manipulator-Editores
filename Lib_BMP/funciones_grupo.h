@@ -5,6 +5,9 @@
 #include "funciones_alba.h"
 #include "funciones_garcia.h"
 #include "funciones_pagliettini.h"
+#include <string.h>
+#define EsNum(c) ( ( (c) >= '0' && (c) <= '9' ) ? 1 : 0 )
+#define NOMBRE_GRUPO "EDITORES"
 
 #define TODO_PIOLA 0
 #define ERROR_ARCH 1
@@ -69,7 +72,6 @@ typedef struct
     char* imagenes[2];
     int cantidadImagenes;
 
-
     // ===== FILTROS BASICOS =====
 
     int negativo;
@@ -77,7 +79,6 @@ typedef struct
 
     int espejarHorizontal;
     int espejarVertical;
-
 
     // ===== FILTROS CON PARAMETROS =====
 
@@ -102,18 +103,15 @@ typedef struct
     int achicar;
     int valorAchicar;
 
-
     // ===== ROTACIONES =====
 
     int rotarDerecha;
     int rotarIzquierda;
 
-
     // ===== CONCATENACIONES =====
 
     int concatenarHorizontal;
     int concatenarVertical;
-
 
     // ===== COMODIN = blurea la imagen =====
 
@@ -127,7 +125,12 @@ typedef struct
 
 }Configuracion;
 
+// ===== FUNCIONES =====
+
 Imagen* leerImagen(const char *rutaArch);
 void liberarImagen(Imagen* img);
+int obtenerValorConIgual(const char *arg, const char *clave, int *valorOut);
+int parsearArgumentos(int argCount, char *argVec[], Configuracion *config);
+
 
 #endif // FUNCIONES_GRUPO_H_INCLUDED

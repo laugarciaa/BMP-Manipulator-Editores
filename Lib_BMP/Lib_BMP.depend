@@ -1,0 +1,28 @@
+# depslib dependency file v1.0
+1792022888 source:c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_alba.c
+
+1792022873 source:c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_campagna.c
+
+1792022906 source:c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_garcia.c
+
+1792095670 source:c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_grupo.c
+	"funciones_grupo.h"
+	<stdio.h>
+	<stdlib.h>
+
+1792109984 c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_grupo.h
+	"funciones_campagna.h"
+	"funciones_alba.h"
+	"funciones_garcia.h"
+	"funciones_pagliettini.h"
+
+1792023300 c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_campagna.h
+
+1792023300 c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_alba.h
+
+1792023300 c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_garcia.h
+
+1792023300 c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_pagliettini.h
+
+1792022918 source:c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_pagliettini.c
+

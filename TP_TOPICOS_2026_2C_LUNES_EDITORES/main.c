@@ -1,18 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../Lib_BMP/funciones_grupo.h"
-int main()
-{
-    Imagen *imagenPrueba = leerImagen("unlam.bmp");
 
-    if(imagenPrueba != NULL)
+int main(int argCount, char *argVec[])
+{
+    Configuracion config = {0};
+
+    parsearArgumentos(argCount, argVec, &config);
+
+    if(config.help == 1)
     {
-        puts("VAMO LO PIBEEEEEEEEEEEEEEEEEEEEEEEEE");
-        printf("La imagen tiene una resolucion de %dx%d pixeles",imagenPrueba->header.alto,imagenPrueba->header.ancho);
+        puts("Uso: bmpmanipuleitor [--filtros] imagen1.bmp [imagen2.bmp]");
+        return TODO_PIOLA;
     }
 
-    puts("TUKEN SOLTA MI CANICHE");
+    if(config.cantidadImagenes >= 1 && config.imagenes[0] != NULL)
+    {
+        Imagen *img = leerImagen(config.imagenes[0]);
+        if(img == NULL)
+        {
+            printf("[ERROR] No se pudo leer '%s'\n", config.imagenes[0]);
+            return ERROR_ARCH;
+        }
+        printf("[OK] Imagen cargada: %dx%d\n", img->header.ancho, img->header.alto);
+        /* Aplicar filtros que estén en 1 y generar NOMBRE_GRUPO_<filtro>_<nombreOriginal>.bmp */
+        liberarImagen(img);
+    }
 
-    liberarImagen(imagenPrueba);
-    return 0;
+    if((config.concatenarHorizontal == 1 || config.concatenarVertical == 1) && config.cantidadImagenes == 2)
+    {
+        /* Leer ambas imagenes y concatenar */
+    }
+
+    return TODO_PIOLA;
 }
