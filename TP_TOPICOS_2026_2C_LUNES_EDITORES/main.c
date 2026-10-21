@@ -22,7 +22,7 @@ int main(int argCount, char *argVec[])
             printf("[ERROR] No se pudo leer '%s'\n", config.imagenes[0]);
             return ERROR_ARCH;
         }
-        printf("[OK] Imagen cargada: %dx%d\n", img->header.ancho, img->header.alto);
+        printf("[OK] Imagen cargada: %dx%d\nNombre imagen: %s\n", img->header.ancho, img->header.alto,config.imagenes[0]);
         /* Aplicar filtros que estén en 1 y generar NOMBRE_GRUPO_<filtro>_<nombreOriginal>.bmp */
         liberarImagen(img);
     }

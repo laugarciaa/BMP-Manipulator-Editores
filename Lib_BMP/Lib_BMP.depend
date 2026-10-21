@@ -5,16 +5,17 @@
 
 1792022906 source:c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_garcia.c
 
-1792095670 source:c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_grupo.c
+1792624687 source:c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_grupo.c
 	"funciones_grupo.h"
 	<stdio.h>
 	<stdlib.h>
 
-1792109984 c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_grupo.h
+1792624696 c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_grupo.h
 	"funciones_campagna.h"
 	"funciones_alba.h"
 	"funciones_garcia.h"
 	"funciones_pagliettini.h"
+	<string.h>
 
 1792023300 c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_campagna.h
 

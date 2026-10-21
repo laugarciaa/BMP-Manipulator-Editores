@@ -169,7 +169,7 @@ int parsearArgumentos(int argCount, char *argVec[], Configuracion *config)
         }
         else if(strcmp(arg, "--comodin") == 0)
         {
-            config->comodin = 1;
+            config->Blur = 1;
             i++;
         }
         else
@@ -181,7 +181,7 @@ int parsearArgumentos(int argCount, char *argVec[], Configuracion *config)
             {
                 if(val < 0 || val > 100)
                 {
-                    printf("[AVISO] Valor fuera de rango (0-100) para --aumentar-contraste=%d. No aplica|z este filtro.\n", val);
+                    printf("[AVISO] Valor fuera de rango (0-100) para --aumentar-contraste=%d. No aplica este filtro.\n", val);
                     i++;
                 }
                 else
@@ -293,7 +293,7 @@ int parsearArgumentos(int argCount, char *argVec[], Configuracion *config)
             /* Empieza con '-' pero no es -- exacto ni filtro válido */
             else
             {
-                printf("[AVISO] Argumento desconocido o invalido: '%s'. No aplica.\n", arg);
+                printf("[AVISO] Argumento desconocido o invalido: '%s'.\n", arg);
                 i++;
             }
         }
@@ -311,4 +311,44 @@ int parsearArgumentos(int argCount, char *argVec[], Configuracion *config)
     }
 
     return TODO_PIOLA;
+}
+
+Imagen* copiarImagen(const Imagen *origen)
+{
+    if(origen == NULL)
+        return NULL;
+
+    Imagen *copia = (Imagen*)malloc(sizeof(Imagen));
+    if(copia == NULL)
+        return NULL;
+
+    /* Copiar header tal cual */
+    copia->header = origen->header;
+
+    /* Reservar matriz de punteros */
+    copia->pixeles = (Pixel**)malloc(copia->header.alto * sizeof(Pixel*));
+    if(copia->pixeles == NULL)
+    {
+        free(copia);
+        return NULL;
+    }
+
+    /* Copiar cada fila */
+    for(int i = 0; i < copia->header.alto; i++)
+    {
+        copia->pixeles[i] = (Pixel*)malloc(copia->header.ancho * sizeof(Pixel));
+        if(copia->pixeles[i] == NULL)
+        {
+            /* Liberar lo que ya se haya reservado si falla */
+            for(int j = 0; j < i; j++)
+                free(copia->pixeles[j]);
+            free(copia->pixeles);
+            free(copia);
+            return NULL;
+        }
+        /* Copiar fila completa */
+        memcpy(copia->pixeles[i], origen->pixeles[i], copia->header.ancho * sizeof(Pixel));
+    }
+
+    return copia;
 }

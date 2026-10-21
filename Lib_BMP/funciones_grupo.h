@@ -131,6 +131,7 @@ Imagen* leerImagen(const char *rutaArch);
 void liberarImagen(Imagen* img);
 int obtenerValorConIgual(const char *arg, const char *clave, int *valorOut);
 int parsearArgumentos(int argCount, char *argVec[], Configuracion *config);
+Imagen* copiarImagen(const Imagen *origen);
 
 
 #endif // FUNCIONES_GRUPO_H_INCLUDED
