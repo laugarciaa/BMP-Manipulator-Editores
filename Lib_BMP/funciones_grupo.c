@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 Imagen* leerImagen(const char *rutaArch)
 {
     FILE *ArchImg = fopen(rutaArch,"rb");
@@ -79,12 +80,12 @@ int obtenerValorConIgual(const char *arg, const char *clave, int *valorOut)
     if(arg[lenClave] != '=')
         return 0;
 
-    char *p = arg + lenClave + 1;
+    const char *p = arg + lenClave + 1;
 
     if(*p == '\0')
         return 0;
 
-    char *q = p;
+    const char *q = p;
 
     while(*q != '\0')
     {
@@ -100,16 +101,16 @@ int obtenerValorConIgual(const char *arg, const char *clave, int *valorOut)
     return 1;
 }
 
-int parsearArgumentos(int argCount, char *argVec[], Configuracion *config)
+int parsearArgumentos(int argc, char *argv[], Configuracion *config)
 {
-    if(config == NULL || argVec == NULL)
+    if(config == NULL || argv == NULL)
         return ERROR_MEM;
 
     int i = 1;
 
-    while(i < argCount)
+    while(i < argc)
     {
-        char *arg = argVec[i];
+        char *arg = argv[i];
 
         /*  Filtros SIN =  */
         if(strcmp(arg, "--help") == 0)
@@ -276,26 +277,40 @@ int parsearArgumentos(int argCount, char *argVec[], Configuracion *config)
                 }
             }
             /* Rutas de imagen */
-            else if(arg[0] != '-')
+            else
             {
-                if(config->cantidadImagenes < 2)
+                char *esBmp = strrchr(arg,'.');
+
+                if(esBmp != NULL)
                 {
-                    config->imagenes[config->cantidadImagenes] = arg;
-                    config->cantidadImagenes++;
-                    i++;
+                    if(strcmp(esBmp + 1,"bmp") == 0)
+                    {
+
+                        if(config->cantidadImagenes < 2)
+                        {
+                            config->imagenes[config->cantidadImagenes] = arg;
+                            config->cantidadImagenes++;
+                            i++;
+                        }
+                        else
+                        {
+                            printf("[AVISO] Se ingresaron mas de 2 imagenes. No aplica '%s'.\n", arg);
+                            i++;
+                        }
+                    }
+                    else
+                    {
+                        printf("[AVISO] Formato incorrecto de imagen: '%s'.\n", arg);
+                        i++;
+                    }
                 }
                 else
                 {
-                    printf("[AVISO] Se ingresaron mas de 2 imagenes. No aplica '%s'.\n", arg);
+                    printf("[AVISO] Argumento desconocido o invalido: '%s'.\n", arg);
                     i++;
                 }
             }
-            /* Empieza con '-' pero no es -- exacto ni filtro válido */
-            else
-            {
-                printf("[AVISO] Argumento desconocido o invalido: '%s'.\n", arg);
-                i++;
-            }
+
         }
     }
 
@@ -377,7 +392,7 @@ int guardarImagen(const Imagen *img, const char *rutaSalida)
         /* Escribir padding si corresponde */
         if(padding > 0)
         {
-            unsigned char padByte = 0x00;
+            unsigned char padByte = 0;
             for(int j = 0; j < padding; j++)
                 fwrite(&padByte, sizeof(unsigned char), 1, arch);
         }
@@ -392,17 +407,103 @@ void armarNombreSalida(char *dest, int tamDest, const char *nombreOriginal, cons
     if(dest == NULL || nombreOriginal == NULL || nombreFiltro == NULL)
         return;
 
-    const char *nombreBase = nombreOriginal;
-    /* Buscar barra invertida '\' */
-    const char *p1 = strrchr(nombreOriginal, '\\');
-    if(p1 != NULL)
-        nombreBase = p1 + 1;
+    snprintf(dest, tamDest, "%s_%s_%s", NOMBRE_GRUPO, nombreFiltro, nombreOriginal);
+}
 
-    /* Buscar barra '/' */
-    const char *p2 = strrchr(nombreOriginal, '/');
-    if(p2 != NULL && (p1 == NULL || p2 > p1))
-        nombreBase = p2 + 1;
+int llamarFiltroSinValor(Imagen *imgOriginal, const char *rutaOriginal, const char *nombreFiltro, filtroSinValor aplicar)
+{
+    if(imgOriginal == NULL || rutaOriginal == NULL || nombreFiltro == NULL || aplicar == NULL)
+        return ERROR_MEM;
 
-    /* Formato: NOMBRE_GRUPO_nombreFiltro_nombreBase.bmp */
-    snprintf(dest, tamDest, "%s_%s_%s", NOMBRE_GRUPO, nombreFiltro, nombreBase);
+    /* copia la imagen original */
+    Imagen *copia = copiarImagen(imgOriginal);
+
+    if(copia == NULL)
+        return ERROR_MEM;
+
+    /* Aplicamos el filtro sobre la copia */
+    aplicar(copia);
+
+    /* Armamos el nombre y guardamos */
+    char nombreSalida[256];
+
+    armarNombreSalida(nombreSalida, sizeof(nombreSalida), rutaOriginal, nombreFiltro);
+
+    int resGuardar = guardarImagen(copia, nombreSalida);
+
+    if(resGuardar == TODO_PIOLA)
+        printf("[OK] Generado: %s\n", nombreSalida);
+
+    else
+        printf("[ERROR] No se pudo guardar: %s\n", nombreSalida);
+
+    /* Liberamos la copia */
+    liberarImagen(copia);
+
+    return resGuardar;
+}
+
+int llamarFiltroConValor(Imagen *imgOriginal, const char *rutaOriginal, const char *nombreFiltro, filtroConValor aplicar, int valor)
+{
+    if(imgOriginal == NULL || rutaOriginal == NULL || nombreFiltro == NULL || aplicar == NULL)
+        return ERROR_MEM;
+
+    /* Copiamos la imagen original */
+    Imagen *copia = copiarImagen(imgOriginal);
+
+    if(copia == NULL)
+        return ERROR_MEM;
+
+    /* Aplicamos el filtro con valor sobre la copia */
+    aplicar(copia, valor);
+
+    /* Armamos el nombre y guardamos */
+    char nombreSalida[256];
+
+    armarNombreSalida(nombreSalida, sizeof(nombreSalida), rutaOriginal, nombreFiltro);
+
+    int resGuardar = guardarImagen(copia, nombreSalida);
+
+    if(resGuardar == TODO_PIOLA)
+        printf("[OK] Generado: %s\n", nombreSalida);
+
+    else
+        printf("[ERROR] No se pudo guardar: %s\n", nombreSalida);
+
+    /* Liberamos la copia */
+    liberarImagen(copia);
+
+    return resGuardar;
+}
+
+int Solucion(int argc, char *argv[])
+{
+    Configuracion config = {0};
+
+    parsearArgumentos(argc, argv, &config);
+
+    if(config.help == 1)
+    {
+        puts("Uso: bmpmanipuleitor [--filtros] imagen1.bmp [imagen2.bmp]");
+        return TODO_PIOLA;
+    }
+
+    if(config.cantidadImagenes >= 1)
+    {
+        Imagen *img = leerImagen(config.imagenes[0]);
+        if(img == NULL)
+        {
+            printf("[ERROR] No se pudo leer '%s'\n", config.imagenes[0]);
+            return ERROR_ARCH;
+        }
+        printf("[OK] Imagen cargada: %dx%d\nNombre imagen: %s\n", img->header.ancho, img->header.alto,config.imagenes[0]);
+        /* Aplicar filtros que estén en 1 y generar NOMBRE_GRUPO_<filtro>_<nombreOriginal>.bmp */
+        liberarImagen(img);
+    }
+
+    if((config.concatenarHorizontal == 1 || config.concatenarVertical == 1) && config.cantidadImagenes == 2)
+    {
+        /* Leer ambas imagenes y concatenar */
+    }
+    return TODO_PIOLA;
 }

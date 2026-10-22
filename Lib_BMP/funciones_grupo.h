@@ -125,6 +125,9 @@ typedef struct
 
 }Configuracion;
 
+typedef void (*filtroSinValor)(Imagen *img);
+typedef void (*filtroConValor)(Imagen *img, int valor);
+
 // ===== FUNCIONES =====
 
 Imagen* leerImagen(const char *rutaArch);
@@ -134,5 +137,8 @@ int parsearArgumentos(int argCount, char *argVec[], Configuracion *config);
 Imagen* copiarImagen(const Imagen *origen);
 int guardarImagen(const Imagen *img, const char *rutaSalida);
 void armarNombreSalida(char *dest, int tamDest, const char *nombreOriginal, const char *nombreFiltro);
+int llamarFiltroSinValor(Imagen *imgOriginal, const char *rutaOriginal, const char *nombreFiltro, filtroSinValor aplicar);
+int llamarFiltroConValor(Imagen *imgOriginal, const char *rutaOriginal, const char *nombreFiltro, filtroConValor aplicar, int valor);
+int Solucion(int argCount, char *argVec[]);
 
 #endif // FUNCIONES_GRUPO_H_INCLUDED
