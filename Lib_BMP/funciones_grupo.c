@@ -352,3 +352,57 @@ Imagen* copiarImagen(const Imagen *origen)
 
     return copia;
 }
+
+int guardarImagen(const Imagen *img, const char *rutaSalida)
+{
+    if(img == NULL || rutaSalida == NULL)
+        return ERROR_MEM;
+
+    FILE *arch = fopen(rutaSalida, "wb");
+    if(arch == NULL)
+        return ERROR_ARCH;
+
+    /* Escribir header */
+    fwrite(&(img->header), sizeof(HeaderIMG), 1, arch);
+
+    /* Calcular padding igual que al leer */
+    int padding = (4 - ((img->header.ancho * sizeof(Pixel)) % 4)) % 4;
+
+    /* Escribir filas */
+    for(unsigned int i = 0; i < img->header.alto; i++)
+    {
+        /* Escribir toda la fila de pixeles */
+        fwrite(img->pixeles[i], sizeof(Pixel), img->header.ancho, arch);
+
+        /* Escribir padding si corresponde */
+        if(padding > 0)
+        {
+            unsigned char padByte = 0x00;
+            for(int j = 0; j < padding; j++)
+                fwrite(&padByte, sizeof(unsigned char), 1, arch);
+        }
+    }
+
+    fclose(arch);
+    return TODO_PIOLA;
+}
+
+void armarNombreSalida(char *dest, int tamDest, const char *nombreOriginal, const char *nombreFiltro)
+{
+    if(dest == NULL || nombreOriginal == NULL || nombreFiltro == NULL)
+        return;
+
+    const char *nombreBase = nombreOriginal;
+    /* Buscar barra invertida '\' */
+    const char *p1 = strrchr(nombreOriginal, '\\');
+    if(p1 != NULL)
+        nombreBase = p1 + 1;
+
+    /* Buscar barra '/' */
+    const char *p2 = strrchr(nombreOriginal, '/');
+    if(p2 != NULL && (p1 == NULL || p2 > p1))
+        nombreBase = p2 + 1;
+
+    /* Formato: NOMBRE_GRUPO_nombreFiltro_nombreBase.bmp */
+    snprintf(dest, tamDest, "%s_%s_%s", NOMBRE_GRUPO, nombreFiltro, nombreBase);
+}

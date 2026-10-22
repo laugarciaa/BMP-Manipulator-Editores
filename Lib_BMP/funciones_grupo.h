@@ -132,6 +132,7 @@ void liberarImagen(Imagen* img);
 int obtenerValorConIgual(const char *arg, const char *clave, int *valorOut);
 int parsearArgumentos(int argCount, char *argVec[], Configuracion *config);
 Imagen* copiarImagen(const Imagen *origen);
-
+int guardarImagen(const Imagen *img, const char *rutaSalida);
+void armarNombreSalida(char *dest, int tamDest, const char *nombreOriginal, const char *nombreFiltro);
 
 #endif // FUNCIONES_GRUPO_H_INCLUDED
