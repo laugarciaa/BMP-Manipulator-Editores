@@ -5,25 +5,24 @@
 
 Imagen* leerImagen(const char *rutaArch)
 {
-    FILE *ArchImg = fopen(rutaArch,"rb");
+    FILE *ArchImg = fopen(rutaArch, "rb");
+
     if(ArchImg == NULL)
     {
         puts("Error al abrir archivo.");
-        fclose(ArchImg);
         return NULL;
     }
 
     Imagen *img = (Imagen*)malloc(sizeof(Imagen));
+
     if(img == NULL)
     {
         puts("Error memoria.");
-        free(img);
         fclose(ArchImg);
         return NULL;
     }
 
     fread(&(img->header), sizeof(HeaderIMG), 1, ArchImg);
-
 
     if(img->header.bm[0] != 'B' || img->header.bm[1] != 'M' || img->header.tamPunto != 24)
     {
@@ -33,19 +32,56 @@ Imagen* leerImagen(const char *rutaArch)
         return NULL;
     }
 
+    /* Descartar los bytes extra del header (por ejemplo, BITMAPV5HEADER de 124 bytes).
+       Se leen secuencialmente y se tiran, igual que se hace con el padding. */
+
+    long bytesExtra = (long)img->header.ini - (long)sizeof(HeaderIMG);
+
+    if(bytesExtra > 0)
+    {
+        unsigned char *relleno = (unsigned char*)malloc((size_t)bytesExtra);
+
+        if(relleno != NULL)
+        {
+            fread(relleno, sizeof(unsigned char), (size_t)bytesExtra, ArchImg);
+            free(relleno);
+        }
+    }
+
     img->pixeles = (Pixel**)malloc(img->header.alto * sizeof(Pixel*));
 
-    int padding = (4 - (img->header.ancho * sizeof(Pixel)) %4 ) %4;
+    if(img->pixeles == NULL)
+    {
+        puts("Error memoria.");
+        free(img);
+        fclose(ArchImg);
+        return NULL;
+    }
 
-    for(int i = 0; i < img->header.alto; i++)
+    int padding = (4 - (img->header.ancho * sizeof(Pixel)) % 4) % 4;
+
+    for(unsigned int i = 0; i < img->header.alto; i++)
     {
         img->pixeles[i] = (Pixel*)malloc(img->header.ancho * sizeof(Pixel));
+
+        if(img->pixeles[i] == NULL)
+        {
+            puts("Error memoria.");
+
+            for(unsigned int j = 0; j < i; j++)
+                free(img->pixeles[j]);
+
+            free(img->pixeles);
+            free(img);
+            fclose(ArchImg);
+            return NULL;
+        }
 
         fread(img->pixeles[i], sizeof(Pixel), img->header.ancho, ArchImg);
 
         if(padding > 0)
         {
-            unsigned char basura[3];
+            unsigned char basura[4];
             fread(basura, sizeof(unsigned char), padding, ArchImg);
         }
     }
@@ -113,22 +149,7 @@ int parsearArgumentos(int argc, char *argv[], Configuracion *config)
         char *arg = argv[i];
 
         /*  Filtros SIN =  */
-        if(strcmp(arg, "--help") == 0)
-        {
-            config->help = 1;
-            i++;
-        }
-        else if(strcmp(arg, "--info") == 0)
-        {
-            config->info = 1;
-            i++;
-        }
-        else if(strcmp(arg, "--validar") == 0)
-        {
-            config->validar = 1;
-            i++;
-        }
-        else if(strcmp(arg, "--negativo") == 0)
+        if(strcmp(arg, "--negativo") == 0)
         {
             config->negativo = 1;
             i++;
@@ -374,26 +395,37 @@ int guardarImagen(const Imagen *img, const char *rutaSalida)
         return ERROR_MEM;
 
     FILE *arch = fopen(rutaSalida, "wb");
+
     if(arch == NULL)
         return ERROR_ARCH;
 
-    /* Escribir header */
-    fwrite(&(img->header), sizeof(HeaderIMG), 1, arch);
+    /* Normalizamos el header a formato clasico de 54 bytes:
+       escribimos header de 54 bytes, asi que los datos
+       de los pixeles empiezan justo despues. */
+    HeaderIMG h = img->header;
 
-    /* Calcular padding igual que al leer */
-    int padding = (4 - ((img->header.ancho * sizeof(Pixel)) % 4)) % 4;
+    h.ini = (int)sizeof(HeaderIMG);
+    h.tamHeader = 40;
 
-    /* Escribir filas */
+    /* Recalculamos tamIMG y tam con las dimensiones actuales */
+
+    unsigned int bytesFila = h.ancho * sizeof(Pixel);
+    unsigned int pad = (4 - (bytesFila % 4)) % 4;
+
+    h.tamIMG = (bytesFila + pad) * h.alto;
+    h.tam = (unsigned int)sizeof(HeaderIMG) + h.tamIMG;
+
+    fwrite(&h, sizeof(HeaderIMG), 1, arch);
+
     for(unsigned int i = 0; i < img->header.alto; i++)
     {
-        /* Escribir toda la fila de pixeles */
         fwrite(img->pixeles[i], sizeof(Pixel), img->header.ancho, arch);
 
-        /* Escribir padding si corresponde */
-        if(padding > 0)
+        if(pad > 0)
         {
             unsigned char padByte = 0;
-            for(int j = 0; j < padding; j++)
+
+            for(unsigned int j = 0; j < pad; j++)
                 fwrite(&padByte, sizeof(unsigned char), 1, arch);
         }
     }
@@ -482,28 +514,124 @@ int Solucion(int argc, char *argv[])
 
     parsearArgumentos(argc, argv, &config);
 
-    if(config.help == 1)
+    /* ===================== CONCATENACION ===================== */
+    if(config.concatenarHorizontal == 1 || config.concatenarVertical == 1)
     {
-        puts("Uso: bmpmanipuleitor [--filtros] imagen1.bmp [imagen2.bmp]");
+        if(config.cantidadImagenes == 2 && config.imagenes[0] != NULL && config.imagenes[1] != NULL)
+        {
+            Imagen *img1 = leerImagen(config.imagenes[0]);
+            Imagen *img2 = leerImagen(config.imagenes[1]);
+
+            if(img1 != NULL && img2 != NULL)
+            {
+                Imagen *imgResultado = NULL;
+                char nombreSalida[256];
+
+                if(config.concatenarHorizontal == 1)
+                {
+                    /* imgResultado = concatenarHorizontal(img1, img2); */
+                    armarNombreSalida(nombreSalida, sizeof(nombreSalida), config.imagenes[0], "concatenar-horizontal");
+                }
+                else
+                {
+                    /* imgResultado = concatenarVertical(img1, img2); */
+                    armarNombreSalida(nombreSalida, sizeof(nombreSalida), config.imagenes[0], "concatenar-vertical");
+                }
+
+                if(imgResultado != NULL)
+                {
+                    if(guardarImagen(imgResultado, nombreSalida) == TODO_PIOLA)
+                        printf("[OK] Generado: %s\n", nombreSalida);
+                    else
+                        printf("[ERROR] No se pudo guardar: %s\n", nombreSalida);
+
+                    liberarImagen(imgResultado);
+                }
+                else
+                {
+                    printf("[ERROR] No se pudo generar la imagen concatenada.\n");
+                }
+            }
+            else
+            {
+                printf("[ERROR] No se pudo leer alguna de las imagenes para concatenar.\n");
+            }
+
+            if(img1 != NULL) liberarImagen(img1);
+            if(img2 != NULL) liberarImagen(img2);
+        }
+
+    }
+
+    /* ===================== FILTROS NORMALES (A CADA IMAGEN) ===================== */
+    if(config.cantidadImagenes == 0)
+    {
+        puts("[AVISO] No se especifico ninguna imagen BMP.");
         return TODO_PIOLA;
     }
 
-    if(config.cantidadImagenes >= 1)
+    for(int j = 0; j < config.cantidadImagenes; j++)
     {
-        Imagen *img = leerImagen(config.imagenes[0]);
-        if(img == NULL)
+        if(config.imagenes[j] != NULL)
         {
-            printf("[ERROR] No se pudo leer '%s'\n", config.imagenes[0]);
-            return ERROR_ARCH;
+            Imagen *imgOriginal = leerImagen(config.imagenes[j]);
+            if(imgOriginal != NULL)
+            {
+                /* Filtros SIN valor */
+
+                /* if(config.negativo == 1)
+                    llamarFiltroSinValor(imgOriginal, config.imagenes[j], "negativo", filtroNegativo);
+
+                if(config.escalaGrises == 1)
+                    llamarFiltroSinValor(imgOriginal, config.imagenes[j], "escala-de-grises", filtroEscalaGrises); */
+
+                if(config.espejarHorizontal == 1)
+                    llamarFiltroSinValor(imgOriginal, config.imagenes[j], "espejar-horizontal", filtroEspejarHorizontal);
+
+               if(config.espejarVertical == 1)
+                    llamarFiltroSinValor(imgOriginal, config.imagenes[j], "espejar-vertical", filtroEspejarVertical);
+
+                /*if(config.rotarDerecha == 1)
+                    llamarFiltroSinValor(imgOriginal, config.imagenes[j], "rotar-derecha", filtroRotarDerecha);
+
+                if(config.rotarIzquierda == 1)
+                    llamarFiltroSinValor(imgOriginal, config.imagenes[j], "rotar-izquierda", filtroRotarIzquierda);
+
+                if(config.Blur == 1)
+                    llamarFiltroSinValor(imgOriginal, config.imagenes[j], "comodin", filtroComodin);
+
+              Filtros CON valor */
+
+                /* if(config.aumentarContraste == 1)
+                    llamarFiltroConValor(imgOriginal, config.imagenes[j], "aumentar-contraste", filtroAumentarContraste, config.valorAumentarContraste);
+
+                if(config.reducirContraste == 1)
+                    llamarFiltroConValor(imgOriginal, config.imagenes[j], "reducir-contraste", filtroReducirContraste, config.valorReducirContraste); */
+
+                if(config.tonalidadAzul == 1)
+                    llamarFiltroConValor(imgOriginal, config.imagenes[j], "tonalidad-azul", filtroTonalidadAzul, config.valorTonalidadAzul);
+
+                /* if(config.tonalidadVerde == 1)
+                    llamarFiltroConValor(imgOriginal, config.imagenes[j], "tonalidad-verde", filtroTonalidadVerde, config.valorTonalidadVerde);
+
+                if(config.tonalidadRoja == 1)
+                    llamarFiltroConValor(imgOriginal, config.imagenes[j], "tonalidad-roja", filtroTonalidadRoja, config.valorTonalidadRoja);
+
+                if(config.recortar == 1)
+                    llamarFiltroConValor(imgOriginal, config.imagenes[j], "recortar", filtroRecortar, config.valorRecortar);
+
+                if(config.achicar == 1)
+                    llamarFiltroConValor(imgOriginal, config.imagenes[j], "achicar", filtroAchicar, config.valorAchicar); */
+
+                liberarImagen(imgOriginal);
+            }
+            else
+            {
+                printf("[ERROR] No se pudo leer '%s'\n", config.imagenes[j]);
+            }
         }
-        printf("[OK] Imagen cargada: %dx%d\nNombre imagen: %s\n", img->header.ancho, img->header.alto,config.imagenes[0]);
-        /* Aplicar filtros que estén en 1 y generar NOMBRE_GRUPO_<filtro>_<nombreOriginal>.bmp */
-        liberarImagen(img);
     }
 
-    if((config.concatenarHorizontal == 1 || config.concatenarVertical == 1) && config.cantidadImagenes == 2)
-    {
-        /* Leer ambas imagenes y concatenar */
-    }
     return TODO_PIOLA;
 }
+

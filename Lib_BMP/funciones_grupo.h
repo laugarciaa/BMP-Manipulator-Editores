@@ -1,10 +1,5 @@
 #ifndef FUNCIONES_GRUPO_H_INCLUDED
 #define FUNCIONES_GRUPO_H_INCLUDED
-
-#include "funciones_campagna.h"
-#include "funciones_alba.h"
-#include "funciones_garcia.h"
-#include "funciones_pagliettini.h"
 #include <string.h>
 #define EsNum(c) ( ( (c) >= '0' && (c) <= '9' ) ? 1 : 0 )
 #define NOMBRE_GRUPO "EDITORES"
@@ -26,6 +21,8 @@ typedef struct
     unsigned short reservado2;
 
     int ini;
+
+
     int tamHeader;
 
     unsigned int ancho;
@@ -127,6 +124,11 @@ typedef struct
 
 typedef void (*filtroSinValor)(Imagen *img);
 typedef void (*filtroConValor)(Imagen *img, int valor);
+
+#include "funciones_campagna.h"
+#include "funciones_alba.h"
+#include "funciones_garcia.h"
+#include "funciones_pagliettini.h"
 
 // ===== FUNCIONES =====
 

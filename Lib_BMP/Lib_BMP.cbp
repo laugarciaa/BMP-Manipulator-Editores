@@ -12,7 +12,6 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="2" />
 				<Option compiler="gcc" />
-				<Option parameters="bmpmanipuleitor.exe unlam.bmp --negativo" />
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-Wall" />
