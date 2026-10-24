@@ -91,3 +91,108 @@ void filtroEscalaGrises(Imagen *copia)
         }
     }
 }
+
+
+
+
+void filtroAchicar(Imagen *copia, int valor)
+{
+    unsigned int alto = copia->header.alto;
+    unsigned int ancho = copia->header.ancho;
+
+    unsigned int nuevoAlto =
+        (alto * valor) / 100;
+
+    unsigned int nuevoAncho =
+        (ancho * valor) / 100;
+
+    Pixel **nueva;
+
+    int i,j;
+
+    if(nuevoAlto == 0)
+        nuevoAlto = 1;
+
+    if(nuevoAncho == 0)
+        nuevoAncho = 1;
+
+    nueva = (Pixel**)malloc(nuevoAlto * sizeof(Pixel*));
+
+    for(i = 0; i < nuevoAlto; i++)
+    {
+        nueva[i] = (Pixel*)malloc(nuevoAncho * sizeof(Pixel));
+    }
+
+    for(i = 0; i < nuevoAlto; i++)
+    {
+        for(j = 0; j < nuevoAncho; j++)
+        {
+            nueva[i][j] =
+                copia->pixeles[
+                    i * alto / nuevoAlto
+                ][
+                    j * ancho / nuevoAncho
+                ];
+        }
+    }
+
+    for(i = 0; i < alto; i++)
+        free(copia->pixeles[i]);
+
+    free(copia->pixeles);
+
+    copia->pixeles = nueva;
+
+    copia->header.alto = nuevoAlto;
+    copia->header.ancho = nuevoAncho;
+}
+
+
+
+
+void filtroRotarIzquierda(Imagen *copia)
+{
+    int i, j;
+    unsigned int altoOriginal = copia->header.alto;
+    unsigned int anchoOriginal = copia->header.ancho;
+
+    Pixel** matrizDimensionesInvertidas = (Pixel**)malloc(anchoOriginal * sizeof(Pixel*));
+
+    if(matrizDimensionesInvertidas == NULL)
+        return;
+
+    for(i = 0; i < anchoOriginal; i++)
+    {
+        matrizDimensionesInvertidas[i] = (Pixel*)malloc(altoOriginal * sizeof(Pixel));
+
+        if(matrizDimensionesInvertidas[i] == NULL)
+        {
+            int k;
+
+            for(k = 0; k < i; k++)
+                free(matrizDimensionesInvertidas[k]);
+
+            free(matrizDimensionesInvertidas);
+            return;
+        }
+    }
+
+    for(i = 0; i < altoOriginal; i++)
+    {
+        for(j = 0; j < anchoOriginal; j++)
+        {
+            matrizDimensionesInvertidas[j][altoOriginal - 1 - i] =
+                copia->pixeles[i][j];
+        }
+    }
+
+    for(i = 0; i < altoOriginal; i++)
+        free(copia->pixeles[i]);
+
+    free(copia->pixeles);
+
+    copia->pixeles = matrizDimensionesInvertidas;
+
+    copia->header.alto = anchoOriginal;
+    copia->header.ancho = altoOriginal;
+}
