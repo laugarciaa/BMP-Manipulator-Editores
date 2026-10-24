@@ -6,5 +6,6 @@
 void filtroEspejarHorizontal(Imagen *copia);
 void filtroEspejarVertical(Imagen *copia);
 void filtroTonalidadAzul(Imagen *copia, int valor);
-
+void filtroRotarDerecha(Imagen *copia);
+void filtroRecortar(Imagen *copia, int valor);
 #endif // FUNCIONES_GARCIA_H_INCLUDED

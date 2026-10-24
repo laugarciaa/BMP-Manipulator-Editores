@@ -591,10 +591,10 @@ int Solucion(int argc, char *argv[])
                if(config.espejarVertical == 1)
                     llamarFiltroSinValor(imgOriginal, config.imagenes[j], "espejar-vertical", filtroEspejarVertical);
 
-                /*if(config.rotarDerecha == 1)
+                if(config.rotarDerecha == 1)
                     llamarFiltroSinValor(imgOriginal, config.imagenes[j], "rotar-derecha", filtroRotarDerecha);
 
-                if(config.rotarIzquierda == 1)
+                /*if(config.rotarIzquierda == 1)
                     llamarFiltroSinValor(imgOriginal, config.imagenes[j], "rotar-izquierda", filtroRotarIzquierda);
 
                 if(config.Blur == 1)
@@ -617,10 +617,10 @@ int Solucion(int argc, char *argv[])
                 if(config.tonalidadRoja == 1)
                     llamarFiltroConValor(imgOriginal, config.imagenes[j], "tonalidad-roja", filtroTonalidadRoja, config.valorTonalidadRoja);
 
-                /* if(config.recortar == 1)
+                 if(config.recortar == 1)
                     llamarFiltroConValor(imgOriginal, config.imagenes[j], "recortar", filtroRecortar, config.valorRecortar);
 
-                if(config.achicar == 1)
+               /* if(config.achicar == 1)
                     llamarFiltroConValor(imgOriginal, config.imagenes[j], "achicar", filtroAchicar, config.valorAchicar); */
 
                 liberarImagen(imgOriginal);
