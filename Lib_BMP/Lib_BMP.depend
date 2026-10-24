@@ -27,3 +27,30 @@
 
 1792022918 source:c:\users\tarog\onedrive\escritorio\facu chtoa\2do a—o\topicos round 2\bmpmanipuleitor\aca se empieza todo capo\bmp-manipulator-editores\lib_bmp\funciones_pagliettini.c
 
+1792107094 source:c:\users\lukytron\onedrive\desktop\facultad\programacion\programacion topicos\proyecto tuken puto de mierda\bmp-manipulator-editores\lib_bmp\funciones_alba.c
+
+1792107094 source:c:\users\lukytron\onedrive\desktop\facultad\programacion\programacion topicos\proyecto tuken puto de mierda\bmp-manipulator-editores\lib_bmp\funciones_campagna.c
+
+1792854943 source:c:\users\lukytron\onedrive\desktop\facultad\programacion\programacion topicos\proyecto tuken puto de mierda\bmp-manipulator-editores\lib_bmp\funciones_garcia.c
+	"funciones_garcia.h"
+	"funciones_grupo.h"
+	<stdio.h>
+	<stdlib.h>
+
+1792854943 c:\users\lukytron\onedrive\desktop\facultad\programacion\programacion topicos\proyecto tuken puto de mierda\bmp-manipulator-editores\lib_bmp\funciones_garcia.h
+	"funciones_grupo.h"
+
+1792854943 c:\users\lukytron\onedrive\desktop\facultad\programacion\programacion topicos\proyecto tuken puto de mierda\bmp-manipulator-editores\lib_bmp\funciones_grupo.h
+	<string.h>
+	"funciones_campagna.h"
+	"funciones_alba.h"
+	"funciones_garcia.h"
+	"funciones_pagliettini.h"
+
+1792107094 c:\users\lukytron\onedrive\desktop\facultad\programacion\programacion topicos\proyecto tuken puto de mierda\bmp-manipulator-editores\lib_bmp\funciones_campagna.h
+
+1792107094 c:\users\lukytron\onedrive\desktop\facultad\programacion\programacion topicos\proyecto tuken puto de mierda\bmp-manipulator-editores\lib_bmp\funciones_alba.h
+
+1792857715 c:\users\lukytron\onedrive\desktop\facultad\programacion\programacion topicos\proyecto tuken puto de mierda\bmp-manipulator-editores\lib_bmp\funciones_pagliettini.h
+	"funciones_grupo.h"
+

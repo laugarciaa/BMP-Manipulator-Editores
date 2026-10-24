@@ -579,11 +579,11 @@ int Solucion(int argc, char *argv[])
             {
                 /* Filtros SIN valor */
 
-                /* if(config.negativo == 1)
+                if(config.negativo == 1)
                     llamarFiltroSinValor(imgOriginal, config.imagenes[j], "negativo", filtroNegativo);
 
                 if(config.escalaGrises == 1)
-                    llamarFiltroSinValor(imgOriginal, config.imagenes[j], "escala-de-grises", filtroEscalaGrises); */
+                    llamarFiltroSinValor(imgOriginal, config.imagenes[j], "escala-de-grises", filtroEscalaGrises);
 
                 if(config.espejarHorizontal == 1)
                     llamarFiltroSinValor(imgOriginal, config.imagenes[j], "espejar-horizontal", filtroEspejarHorizontal);
@@ -611,13 +611,13 @@ int Solucion(int argc, char *argv[])
                 if(config.tonalidadAzul == 1)
                     llamarFiltroConValor(imgOriginal, config.imagenes[j], "tonalidad-azul", filtroTonalidadAzul, config.valorTonalidadAzul);
 
-                /* if(config.tonalidadVerde == 1)
+                if(config.tonalidadVerde == 1)
                     llamarFiltroConValor(imgOriginal, config.imagenes[j], "tonalidad-verde", filtroTonalidadVerde, config.valorTonalidadVerde);
 
                 if(config.tonalidadRoja == 1)
                     llamarFiltroConValor(imgOriginal, config.imagenes[j], "tonalidad-roja", filtroTonalidadRoja, config.valorTonalidadRoja);
 
-                if(config.recortar == 1)
+                /* if(config.recortar == 1)
                     llamarFiltroConValor(imgOriginal, config.imagenes[j], "recortar", filtroRecortar, config.valorRecortar);
 
                 if(config.achicar == 1)
