@@ -1,7 +1,24 @@
 #include "funciones_grupo.h"
 #include <stdio.h>
 #include <stdlib.h>
+    /* Este comentario se realiza en grupo.c ya que main.c, es decir, el archivo donde pedía estar este comentario, no se encuentra dentro de los archivos listados en el .ZIP de entrega
+            Apellido: Campagna, Valentino Sebastian
+            DNI: 45920851
+            Entrega: Si
 
+            Apellido: Pagliettini, Lucas Ramon
+            DNI: 45813547
+            Entrega: Si
+
+            Apellido: Garcia, Lautaro Julian
+            DNI: 45919169
+            Entrega: Si
+
+            Apellido: Alba, Juan Pablo
+            DNI: 45739601
+            Entrega: No
+
+    */
 
 Imagen* leerImagen(const char *rutaArch)
 {
@@ -139,203 +156,213 @@ int obtenerValorConIgual(const char *arg, const char *clave, int *valorOut)
 
 int parsearArgumentos(int argc, char *argv[], Configuracion *config)
 {
-    if(config == NULL || argv == NULL)
+    if(config == NULL || argv    == NULL)
         return ERROR_MEM;
 
     int i = 1;
-
     while(i < argc)
     {
         char *arg = argv[i];
+        int val = 0;
 
-        /*  Filtros SIN =  */
+        /* Flags SIN valor */
         if(strcmp(arg, "--negativo") == 0)
         {
             config->negativo = 1;
             i++;
+            continue;
         }
-        else if(strcmp(arg, "--escala-de-grises") == 0)
+        if(strcmp(arg, "--escala-de-grises") == 0)
         {
             config->escalaGrises = 1;
             i++;
+            continue;
         }
-        else if(strcmp(arg, "--espejar-horizontal") == 0)
+        if(strcmp(arg, "--espejar-horizontal") == 0)
         {
             config->espejarHorizontal = 1;
             i++;
+            continue;
         }
-        else if(strcmp(arg, "--espejar-vertical") == 0)
+        if(strcmp(arg, "--espejar-vertical") == 0)
         {
             config->espejarVertical = 1;
             i++;
+            continue;
         }
-        else if(strcmp(arg, "--rotar-derecha") == 0)
+        if(strcmp(arg, "--rotar-derecha") == 0)
         {
             config->rotarDerecha = 1;
             i++;
+            continue;
         }
-        else if(strcmp(arg, "--rotar-izquierda") == 0)
+        if(strcmp(arg, "--rotar-izquierda") == 0)
         {
             config->rotarIzquierda = 1;
             i++;
+            continue;
         }
-        else if(strcmp(arg, "--concatenar-horizontal") == 0)
+        if(strcmp(arg, "--concatenar-horizontal") == 0)
         {
             config->concatenarHorizontal = 1;
             i++;
+            continue;
         }
-        else if(strcmp(arg, "--concatenar-vertical") == 0)
+        if(strcmp(arg, "--concatenar-vertical") == 0)
         {
             config->concatenarVertical = 1;
             i++;
+            continue;
         }
-        else if(strcmp(arg, "--comodin") == 0)
+        if(strcmp(arg, "--comodin") == 0)
         {
             config->Blur = 1;
             i++;
+            continue;
         }
-        else
+        if(strcmp(arg, "--info") == 0)
         {
-            int val = 0;
+            config->info = 1;
+            i++;
+            continue;
+        }
+        if(strcmp(arg, "--validar") == 0)
+        {
+            config->validar = 1;
+            i++;
+            continue;
+        }
 
-            /* Filtros con =NUMERO */
-            if(obtenerValorConIgual(arg, "--aumentar-contraste", &val))
+        /* Filtros CON valor (=) - Revisar ANTES de ver si es imagen */
+        if(obtenerValorConIgual(arg, "--aumentar-contraste", &val))
+        {
+            if(val < 0 || val > 100)
             {
-                if(val < 0 || val > 100)
-                {
-                    printf("[AVISO] Valor fuera de rango (0-100) para --aumentar-contraste=%d. No aplica este filtro.\n", val);
-                    i++;
-                }
-                else
-                {
-                    config->aumentarContraste = 1;
-                    config->valorAumentarContraste = val;
-                    i++;
-                }
+                printf("[AVISO] Valor fuera de rango (0-100) para --aumentar-contraste=%d. No aplica este filtro.\n", val);
             }
-            else if(obtenerValorConIgual(arg, "--reducir-contraste", &val))
-            {
-                if(val < 0 || val > 100)
-                {
-                    printf("[AVISO] Valor fuera de rango (0-100) para --reducir-contraste=%d. No aplica este filtro.\n", val);
-                    i++;
-                }
-                else
-                {
-                    config->reducirContraste = 1;
-                    config->valorReducirContraste = val;
-                    i++;
-                }
-            }
-            else if(obtenerValorConIgual(arg, "--tonalidad-azul", &val))
-            {
-                if(val < 0 || val > 100)
-                {
-                    printf("[AVISO] Valor fuera de rango (0-100) para --tonalidad-azul=%d. No aplica este filtro.\n", val);
-                    i++;
-                }
-                else
-                {
-                    config->tonalidadAzul = 1;
-                    config->valorTonalidadAzul = val;
-                    i++;
-                }
-            }
-            else if(obtenerValorConIgual(arg, "--tonalidad-verde", &val))
-            {
-                if(val < 0 || val > 100)
-                {
-                    printf("[AVISO] Valor fuera de rango (0-100) para --tonalidad-verde=%d. No aplica este filtro.\n", val);
-                    i++;
-                }
-                else
-                {
-                    config->tonalidadVerde = 1;
-                    config->valorTonalidadVerde = val;
-                    i++;
-                }
-            }
-            else if(obtenerValorConIgual(arg, "--tonalidad-roja", &val))
-            {
-                if(val < 0 || val > 100)
-                {
-                    printf("[AVISO] Valor fuera de rango (0-100) para --tonalidad-roja=%d. No aplica este filtro.\n", val);
-                    i++;
-                }
-                else
-                {
-                    config->tonalidadRoja = 1;
-                    config->valorTonalidadRoja = val;
-                    i++;
-                }
-            }
-            else if(obtenerValorConIgual(arg, "--recortar", &val))
-            {
-                if(val < 0 || val > 100)
-                {
-                    printf("[AVISO] Valor fuera de rango (0-100) para --recortar=%d. No aplica este filtro.\n", val);
-                    i++;
-                }
-                else
-                {
-                    config->recortar = 1;
-                    config->valorRecortar = val;
-                    i++;
-                }
-            }
-            else if(obtenerValorConIgual(arg, "--achicar", &val))
-            {
-                if(val < 0 || val > 100)
-                {
-                    printf("[AVISO] Valor fuera de rango (0-100) para --achicar=%d. No aplica este filtro.\n", val);
-                    i++;
-                }
-                else
-                {
-                    config->achicar = 1;
-                    config->valorAchicar = val;
-                    i++;
-                }
-            }
-            /* Rutas de imagen */
             else
             {
-                char *esBmp = strrchr(arg,'.');
-
-                if(esBmp != NULL)
-                {
-                    if(strcmp(esBmp + 1,"bmp") == 0)
-                    {
-
-                        if(config->cantidadImagenes < 2)
-                        {
-                            config->imagenes[config->cantidadImagenes] = arg;
-                            config->cantidadImagenes++;
-                            i++;
-                        }
-                        else
-                        {
-                            printf("[AVISO] Se ingresaron mas de 2 imagenes. No aplica '%s'.\n", arg);
-                            i++;
-                        }
-                    }
-                    else
-                    {
-                        printf("[AVISO] Formato incorrecto de imagen: '%s'.\n", arg);
-                        i++;
-                    }
-                }
-                else
-                {
-                    printf("[AVISO] Argumento desconocido o invalido: '%s'.\n", arg);
-                    i++;
-                }
+                config->aumentarContraste = 1;
+                config->valorAumentarContraste = val;
             }
-
+            i++;
+            continue;
         }
+
+        if(obtenerValorConIgual(arg, "--reducir-contraste", &val))
+        {
+            if(val < 0 || val > 100)
+            {
+                printf("[AVISO] Valor fuera de rango (0-100) para --reducir-contraste=%d. No aplica este filtro.\n", val);
+            }
+            else
+            {
+                config->reducirContraste = 1;
+                config->valorReducirContraste = val;
+            }
+            i++;
+            continue;
+        }
+
+        if(obtenerValorConIgual(arg, "--tonalidad-azul", &val))
+        {
+            if(val < 0 || val > 100)
+            {
+                printf("[AVISO] Valor fuera de rango (0-100) para --tonalidad-azul=%d. No aplica este filtro.\n", val);
+            }
+            else
+            {
+                config->tonalidadAzul = 1;
+                config->valorTonalidadAzul = val;
+            }
+            i++;
+            continue;
+        }
+
+        if(obtenerValorConIgual(arg, "--tonalidad-verde", &val))
+        {
+            if(val < 0 || val > 100)
+            {
+                printf("[AVISO] Valor fuera de rango (0-100) para --tonalidad-verde=%d. No aplica este filtro.\n", val);
+            }
+            else
+            {
+                config->tonalidadVerde = 1;
+                config->valorTonalidadVerde = val;
+            }
+            i++;
+            continue;
+        }
+
+        if(obtenerValorConIgual(arg, "--tonalidad-roja", &val))
+        {
+            if(val < 0 || val > 100)
+            {
+                printf("[AVISO] Valor fuera de rango (0-100) para --tonalidad-roja=%d. No aplica este filtro.\n", val);
+            }
+            else
+            {
+                config->tonalidadRoja = 1;
+                config->valorTonalidadRoja = val;
+            }
+            i++;
+            continue;
+        }
+
+        if(obtenerValorConIgual(arg, "--recortar", &val))
+        {
+            if(val < 0 || val > 100)
+            {
+                printf("[AVISO] Valor fuera de rango (0-100) para --recortar=%d. No aplica este filtro.\n", val);
+            }
+            else
+            {
+                config->recortar = 1;
+                config->valorRecortar = val;
+            }
+            i++;
+            continue;
+        }
+
+        if(obtenerValorConIgual(arg, "--achicar", &val))
+        {
+            if(val < 0 || val > 100)
+            {
+                printf("[AVISO] Valor fuera de rango (0-100) para --achicar=%d. No aplica este filtro.\n", val);
+            }
+            else
+            {
+                config->achicar = 1;
+                config->valorAchicar = val;
+            }
+            i++;
+            continue;
+        }
+
+        /* Verificar si es imagen .bmp */
+        char *esBmp = strrchr(arg, '.');
+        if(esBmp != NULL && strcmp(esBmp + 1, "bmp") == 0)
+        {
+            if(config->cantidadImagenes < 2)
+            {
+                config->imagenes[config->cantidadImagenes] = arg;
+                config->cantidadImagenes++;
+            }
+            else
+            {
+                printf("[AVISO] Se ingresaron mas de 2 imagenes. No aplica '%s'.\n", arg);
+            }
+            i++;
+            continue;
+        }
+
+        /* Argumento desconocido */
+        printf("[AVISO] Argumento desconocido o invalido: '%s'.\n", arg);
+        i++;
+        continue;
     }
 
-    /* Validación para concatenación */
+    /* Validacion para concatenacion */
     if((config->concatenarHorizontal == 1 || config->concatenarVertical == 1))
     {
         if(config->cantidadImagenes < 2)
@@ -524,32 +551,47 @@ int Solucion(int argc, char *argv[])
 
             if(img1 != NULL && img2 != NULL)
             {
-                Imagen *imgResultado = NULL;
-                char nombreSalida[256];
-
                 if(config.concatenarHorizontal == 1)
                 {
-                    imgResultado = concatenarHorizontal(img1, img2);
-                    armarNombreSalida(nombreSalida, sizeof(nombreSalida), config.imagenes[0], "concatenar-horizontal");
-                }
-                else if(config.concatenarVertical == 1)
-                {
-                    imgResultado = concatenarVertical(img1, img2);
-                    armarNombreSalida(nombreSalida, sizeof(nombreSalida), config.imagenes[0], "concatenar-vertical");
-                }
+                    Imagen *imgResH = concatenarHorizontal(img1, img2);
+                    if(imgResH != NULL)
+                    {
+                            char nombreSalidaH[256];
 
-                if(imgResultado != NULL)
-                {
-                    if(guardarImagen(imgResultado, nombreSalida) == TODO_PIOLA)
-                        printf("[OK] Generado: %s\n", nombreSalida);
+                            armarNombreSalida(nombreSalidaH, sizeof(nombreSalidaH), config.imagenes[0], "concatenar-horizontal");
+
+                            if(guardarImagen(imgResH, nombreSalidaH) == TODO_PIOLA)
+                                printf("[OK] Generado: %s\n", nombreSalidaH);
+                            else
+                                printf("[ERROR] No se pudo guardar: %s\n", nombreSalidaH);
+
+                            liberarImagen(imgResH);
+                        }
                     else
-                        printf("[ERROR] No se pudo guardar: %s\n", nombreSalida);
-
-                    liberarImagen(imgResultado);
+                    {
+                        printf("[ERROR] No se pudo generar la imagen concatenada horizontal.\n");
+                    }
                 }
-                else
+
+                if(config.concatenarVertical == 1)
                 {
-                    printf("[ERROR] No se pudo generar la imagen concatenada.\n");
+                    Imagen *imgResV = concatenarVertical(img1, img2);
+                    if(imgResV != NULL)
+                    {
+                        char nombreSalidaV[256];
+
+                        armarNombreSalida(nombreSalidaV, sizeof(nombreSalidaV), config.imagenes[0], "concatenar-vertical");
+
+                        if(guardarImagen(imgResV, nombreSalidaV) == TODO_PIOLA)
+                            printf("[OK] Generado: %s\n", nombreSalidaV);
+                        else
+                            printf("[ERROR] No se pudo guardar: %s\n", nombreSalidaV);
+                        liberarImagen(imgResV);
+                    }
+                    else
+                    {
+                        printf("[ERROR] No se pudo generar la imagen concatenada vertical.\n");
+                    }
                 }
             }
             else

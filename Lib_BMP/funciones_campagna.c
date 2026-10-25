@@ -13,12 +13,13 @@ Imagen* concatenarHorizontal(Imagen* copia1,Imagen* copia2)
     if(fin == NULL)
         return NULL;
     fin->header = copia1->header;
-    fin->header.ancho=anchoFinal;
-    fin->header.alto=altoFinal;
+    fin->header.ancho = anchoFinal;
+    fin->header.alto = altoFinal;
 
-    Pixel relleno = {240,180,80};
+    Pixel relleno = {240,180,80}; // COLOR CELESTE
 
-    fin->pixeles=malloc(altoFinal * sizeof(Pixel*));
+    fin->pixeles = malloc(altoFinal * sizeof(Pixel*));
+
     if(fin->pixeles == NULL)
     {
         free(fin);
@@ -26,7 +27,7 @@ Imagen* concatenarHorizontal(Imagen* copia1,Imagen* copia2)
     }
     for(int i = 0; i < altoFinal; i++)
     {
-        fin->pixeles[i]=malloc(anchoFinal * sizeof(Pixel));
+        fin->pixeles[i] = malloc(anchoFinal * sizeof(Pixel));
         if(fin->pixeles[i] == NULL)
         {
             for(int j = 0; j < i; j++)
@@ -109,31 +110,40 @@ void filtroComodin(Imagen* copia)
 
     int b, g, r;
 
-    for (int i = 0; i < copia->header.alto; i++)
+    unsigned int alto = copia->header.alto;
+    unsigned int ancho = copia->header.ancho;
+
+    for (int i = 0; i < alto; i++)
     {
-        for (int j = 0; j < copia->header.ancho; j++)
+        for (int j = 0; j < ancho; j++)
         {
             b = 0;
             g = 0;
             r = 0;
+            int count = 0;
 
             for (int f = -1; f <= 1; f++)
             {
                 for (int c = -1; c <= 1; c++)
                 {
-                    if (f >= 0 && f < copia->header.alto &&
-                        c >= 0 && c < copia->header.ancho)
+                    int ni = i + f;
+                    int nj = j + c;
+                    if (ni >= 0 && ni < alto && nj >= 0 && nj < ancho)
                     {
-                        b += copiac->pixeles[i + f][j + c].b;
-                        g += copiac->pixeles[i + f][j + c].g;
-                        r += copiac->pixeles[i + f][j + c].r;
+                        b += copiac->pixeles[ni][nj].b;
+                        g += copiac->pixeles[ni][nj].g;
+                        r += copiac->pixeles[ni][nj].r;
+                        count++;
                     }
                 }
             }
 
-            copia->pixeles[i][j].b = b / 3;
-            copia->pixeles[i][j].g = g / 3;
-            copia->pixeles[i][j].r = r / 3;
+            if (count == 0)
+                count = 1;
+
+            copia->pixeles[i][j].b = b / count;
+            copia->pixeles[i][j].g = g / count;
+            copia->pixeles[i][j].r = r / count;
         }
     }
 
@@ -143,7 +153,7 @@ void filtroComodin(Imagen* copia)
 void filtroAumentarContraste(Imagen* copia, int porcentaje)
 {
     if(porcentaje < 0 || porcentaje > 100)
-        return NULL;
+        return;
 
     float factor = 1.0f + (porcentaje/100.0f);
     for(int i = 0; i < copia->header.alto; i++)
@@ -160,7 +170,7 @@ void filtroAumentarContraste(Imagen* copia, int porcentaje)
 void filtroReducirContraste(Imagen* copia, int porcentaje)
 {
     if(porcentaje < 0 || porcentaje > 100)
-        return NULL;
+        return;
 
     float factor = 1.0f - (porcentaje/100.0f);
     for(int i = 0; i < copia->header.alto; i++)
