@@ -116,14 +116,13 @@ void filtroComodin(Imagen* copia)
             b = 0;
             g = 0;
             r = 0;
-            cantidad = 0;
 
             for (int f = -1; f <= 1; f++)
             {
                 for (int c = -1; c <= 1; c++)
                 {
-                    if (fila >= 0 && fila < copia->header.alto &&
-                        columna >= 0 && columna < copia->header.ancho)
+                    if (f >= 0 && f < copia->header.alto &&
+                        c >= 0 && c < copia->header.ancho)
                     {
                         b += copiac->pixeles[i + f][j + c].b;
                         g += copiac->pixeles[i + f][j + c].g;
@@ -139,4 +138,47 @@ void filtroComodin(Imagen* copia)
     }
 
     liberarImagen(copiac);
+}
+
+void filtroAumentarContraste(Imagen* copia, int porcentaje)
+{
+    if(porcentaje < 0 || porcentaje > 100)
+        return NULL;
+
+    float factor = 1.0f + (porcentaje/100.0f);
+    for(int i = 0; i < copia->header.alto; i++)
+    {
+        for(int j = 0; j < copia->header.ancho; j++)
+        {
+            copia->pixeles[i][j].b = limitarColor(factor * (copia->pixeles[i][j].b - 128) + 128);
+            copia->pixeles[i][j].g = limitarColor(factor * (copia->pixeles[i][j].g - 128) + 128);
+            copia->pixeles[i][j].r = limitarColor(factor * (copia->pixeles[i][j].r - 128) + 128);
+        }
+    }
+}
+
+void filtroReducirContraste(Imagen* copia, int porcentaje)
+{
+    if(porcentaje < 0 || porcentaje > 100)
+        return NULL;
+
+    float factor = 1.0f - (porcentaje/100.0f);
+    for(int i = 0; i < copia->header.alto; i++)
+    {
+        for(int j = 0; j < copia->header.ancho; j++)
+        {
+            copia->pixeles[i][j].b = limitarColor(factor * (copia->pixeles[i][j].b - 128) + 128);
+            copia->pixeles[i][j].g = limitarColor(factor * (copia->pixeles[i][j].g - 128) + 128);
+            copia->pixeles[i][j].r = limitarColor(factor * (copia->pixeles[i][j].r - 128) + 128);
+        }
+    }
+}
+
+int limitarColor(float valor)
+{
+    if(valor < 0)
+        return 0;
+    if(valor > 255)
+        return 255;
+    return (int)valor;
 }

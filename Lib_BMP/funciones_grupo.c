@@ -602,11 +602,11 @@ int Solucion(int argc, char *argv[])
 
             /* Filtros CON valor */
 
-                /* if(config.aumentarContraste == 1)
+                if(config.aumentarContraste == 1)
                     llamarFiltroConValor(imgOriginal, config.imagenes[j], "aumentar-contraste", filtroAumentarContraste, config.valorAumentarContraste);
 
                 if(config.reducirContraste == 1)
-                    llamarFiltroConValor(imgOriginal, config.imagenes[j], "reducir-contraste", filtroReducirContraste, config.valorReducirContraste); */
+                    llamarFiltroConValor(imgOriginal, config.imagenes[j], "reducir-contraste", filtroReducirContraste, config.valorReducirContraste);
 
                 if(config.tonalidadAzul == 1)
                     llamarFiltroConValor(imgOriginal, config.imagenes[j], "tonalidad-azul", filtroTonalidadAzul, config.valorTonalidadAzul);
