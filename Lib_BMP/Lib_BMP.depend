@@ -60,3 +60,35 @@
 	<stdlib.h>
 	"funciones_pagliettini.h"
 
+1792626863 source:c:\users\valen\desktop\topicos\tp_topicos_2026_2c_lunes_editores\bmp-manipulator-editores\lib_bmp\funciones_alba.c
+
+1792887883 source:c:\users\valen\desktop\topicos\tp_topicos_2026_2c_lunes_editores\bmp-manipulator-editores\lib_bmp\funciones_garcia.c
+	"funciones_garcia.h"
+	"funciones_grupo.h"
+	<stdio.h>
+	<stdlib.h>
+
+1792862948 c:\users\valen\desktop\topicos\tp_topicos_2026_2c_lunes_editores\bmp-manipulator-editores\lib_bmp\funciones_garcia.h
+	"funciones_grupo.h"
+
+1792860830 c:\users\valen\desktop\topicos\tp_topicos_2026_2c_lunes_editores\bmp-manipulator-editores\lib_bmp\funciones_grupo.h
+	<string.h>
+	"funciones_campagna.h"
+	"funciones_alba.h"
+	"funciones_garcia.h"
+	"funciones_pagliettini.h"
+
+1792888312 c:\users\valen\desktop\topicos\tp_topicos_2026_2c_lunes_editores\bmp-manipulator-editores\lib_bmp\funciones_campagna.h
+	"funciones_grupo.h"
+
+1792626863 c:\users\valen\desktop\topicos\tp_topicos_2026_2c_lunes_editores\bmp-manipulator-editores\lib_bmp\funciones_alba.h
+
+1792872990 c:\users\valen\desktop\topicos\tp_topicos_2026_2c_lunes_editores\bmp-manipulator-editores\lib_bmp\funciones_pagliettini.h
+	"funciones_grupo.h"
+
+1792872990 source:c:\users\valen\desktop\topicos\tp_topicos_2026_2c_lunes_editores\bmp-manipulator-editores\lib_bmp\funciones_pagliettini.c
+	"funciones_grupo.h"
+	<stdio.h>
+	<stdlib.h>
+	"funciones_pagliettini.h"
+

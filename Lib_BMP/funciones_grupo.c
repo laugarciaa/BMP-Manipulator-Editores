@@ -189,7 +189,7 @@ int parsearArgumentos(int argc, char *argv[], Configuracion *config)
             config->concatenarVertical = 1;
             i++;
         }
-        else if(strcmp(arg, "--Blur") == 0)
+        else if(strcmp(arg, "--comodin") == 0)
         {
             config->Blur = 1;
             i++;
@@ -529,12 +529,12 @@ int Solucion(int argc, char *argv[])
 
                 if(config.concatenarHorizontal == 1)
                 {
-                    /* imgResultado = concatenarHorizontal(img1, img2); */
+                    imgResultado = concatenarHorizontal(img1, img2);
                     armarNombreSalida(nombreSalida, sizeof(nombreSalida), config.imagenes[0], "concatenar-horizontal");
                 }
-                else
+                else if(config.concatenarVertical == 1)
                 {
-                    /* imgResultado = concatenarVertical(img1, img2); */
+                    imgResultado = concatenarVertical(img1, img2);
                     armarNombreSalida(nombreSalida, sizeof(nombreSalida), config.imagenes[0], "concatenar-vertical");
                 }
 
@@ -597,10 +597,10 @@ int Solucion(int argc, char *argv[])
                 if(config.rotarIzquierda == 1)
                     llamarFiltroSinValor(imgOriginal, config.imagenes[j], "rotar-izquierda", filtroRotarIzquierda);
 
-                /*if(config.Blur == 1)
+                if(config.Blur == 1)
                     llamarFiltroSinValor(imgOriginal, config.imagenes[j], "comodin", filtroComodin);
 
-              Filtros CON valor */
+            /* Filtros CON valor */
 
                 /* if(config.aumentarContraste == 1)
                     llamarFiltroConValor(imgOriginal, config.imagenes[j], "aumentar-contraste", filtroAumentarContraste, config.valorAumentarContraste);
